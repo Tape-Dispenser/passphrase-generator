@@ -6,12 +6,12 @@ typedef struct CharMap {
     char* values;
 };
 
-int map_add(CharMap* map, char key, char value);
+int map_add(struct CharMap* map, char key, char value);
 
-int map_get(CharMap* map, char key, char* output);
+int map_get(struct CharMap* map, char key, char* output);
 
-int map_edit(CharMap* map, char key, char value);
+int map_update(struct CharMap* map, char key, char value);
 
-int map_delete(CharMap* map, char key, char value);
+int map_delete(struct CharMap* map, char key);
 
 #endif

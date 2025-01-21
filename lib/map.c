@@ -26,7 +26,7 @@ typedef struct CharMap {
 };
 
 // create a new map with empty lists (map constructor)
-CharMap new_map() {
+struct CharMap new_map() {
   struct CharMap map;
   map.keys = malloc(sizeof(char));
   map.keys[0] = 0;
@@ -36,7 +36,7 @@ CharMap new_map() {
 }
 
 // add key-value pair (input new key and new value)
-int map_add(CharMap* map, char key, char value) {
+int map_add(struct CharMap* map, char key, char value) {
   // returns 0 on success
   // returns -1 if key-value pair already exists in map
   char temp;
@@ -54,7 +54,7 @@ int map_add(CharMap* map, char key, char value) {
 }
 
 // get value (input key)
-int map_get(CharMap* map, char key, char* output) {
+int map_get(struct CharMap* map, char key, char* output) {
   // returns 0 on success
   // returns -1 if key-value pair does not exist in map
   int index = 0;
@@ -69,7 +69,7 @@ int map_get(CharMap* map, char key, char* output) {
 }
 
 // edit value in pair (input key and new value)
-int map_update(CharMap* map, char key, char value) {
+int map_update(struct CharMap* map, char key, char value) {
   // returns 0 on success
   // returns -1 if key-value pair does not exist in map
   int index = 0;
@@ -84,7 +84,7 @@ int map_update(CharMap* map, char key, char value) {
 }
 
 // remove key-value pair (input key to remove)
-int map_delete(CharMap* map, char key) {
+int map_delete(struct CharMap* map, char key) {
   // returns 0 on success
   // returns -1 if key-value pair does not exist in map
   int index = 0;
