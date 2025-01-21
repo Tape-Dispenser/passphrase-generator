@@ -48,6 +48,7 @@ int is_alpha(char input) {
 } 
 
 unsigned short rng() {
+  // read 2 bytes from /dev/random
   unsigned short output;
   FILE* random = fopen("/dev/random", "rb");
   fread(&output, sizeof(short), 1, random);
@@ -56,6 +57,8 @@ unsigned short rng() {
 }
 
 char* get_word() {
+  // get a random word from words.txt
+
   // init variables
   unsigned short index = rng();
   char c = 0;
@@ -64,6 +67,7 @@ char* get_word() {
   size_t line_len = 1;
   char* line = malloc(line_len * sizeof(char));
 
+  // open words.txt
   FILE* words = NULL;
   words = fopen("./words.txt", "r");
   if (words == NULL) {
@@ -72,6 +76,7 @@ char* get_word() {
     exit(-1);
   }
 
+  // read each line of words.txt into the line variable
   while (c != EOF) {
     c = fgetc(words);
     if (c == '\n') {
@@ -93,12 +98,14 @@ char* get_word() {
       line = realloc(line, ++line_len);
     }
   }
+  // this should never be called unless line.txt gets shortened
   fclose(words);
   printf("ERROR: could not find word on line %u!", index);
   exit(-1);
 }
 
 int stoi(char* input) {
+  // convert numerical string to int
   int i = 0;
   char c;
   int output = 0;
@@ -139,17 +146,20 @@ void help() {
 }
 
 char* gen_passphrase() {
+  // generate string of words, the output of this function can be used as a passphrase if no modifiers are selected
   char* passphrase = malloc(sizeof(char));
   char* word;
   unsigned int seperator_count = strlen(seperator);
   if (length_mode) {
     // TODO: Write length mode generation
+    // generate a passphrase of a certain character count
     passphrase = realloc(passphrase, length * sizeof(char)); // idk why i always put * sizeof(char) in mallocs it does nothing :skull:
     word = get_word();
     if (misspell) {
       
     }
   } else {
+    // generate a passphrase of a certain word count
     int i = 0;
     while (i < words) {
       word = get_word();
@@ -175,6 +185,7 @@ char* gen_passphrase() {
 }
 
 char* random_caps(char* input) {
+  // capitalize letters randomly based on globally specified mutation chance
   int i = 0;
   int string_length = strlen(input);
   while (i < string_length) {
@@ -193,6 +204,7 @@ char* random_caps(char* input) {
 }
 
 char* random_numbers(char* input) {
+  // replace letters with numbers randomly based on globally specified mutation chance
   int i = 0;
   while (i < strlen(input)) {
     if (rng() % mutation_chance != 0) {
@@ -219,6 +231,7 @@ int main(int argc, char **argv) {
   while ((option = getopt(argc, argv, ":hcnmpl:w:u:s:")) != -1) {
     switch (option) {
       case 'h':
+        // print info and exit
         help();
         exit(0);
       case 'c':
@@ -280,8 +293,10 @@ int main(int argc, char **argv) {
   */
   
 
-
+  // generate passphrase
   char* passphrase = gen_passphrase();
+
+  // apply mutators if applicable
   if (capitalize) {
     random_caps(passphrase);
   }
@@ -289,7 +304,7 @@ int main(int argc, char **argv) {
   if (numbers) {
     random_numbers(passphrase);
   }
-  
+  // print passphrase to terminal
   printf("%s\n", passphrase);
   exit(0);
 }
