@@ -1,7 +1,7 @@
 /*
  * map.c: Map library written for passphrase generator
  * Copyright (C) 2025, Ada Gramiak
- *   Co-author: Stella
+ *   Special thanks to: Stella
  *   Contact: <adadispenser@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -93,15 +93,19 @@ int map_delete(struct CharMap* map, char key) {
       index++;
       continue;
     }
-    // strlen will return length of string but since one character is removed no pointer math is required
-    int new_size = strlen(map->keys);
-    // create new string containing all characters after key-value pair to delete
-
-    // paste new string at the index of the key-value pair to delete (overwriting pair to delete)
-
-    // add a new null terminator
-
+    // get index of last entry (strlen)
+    int last_entry = strlen(map->keys);
+    // overwrite the entry at index with the last entry in the map
+    map->keys[index] = map->keys[last_entry];
+    map->values[index] = map->values[last_entry];
+    // overwrite the duplicate entry at the end of the map with a null terminator
+    map->keys[last_entry] = 0;
+    map->values[last_entry] = 0;
     // shrink allocated memory size for string
+    // original strlen will point to the last character of the original string, which is where the new null terminator will go,
+    // therefore no pointer math is needed for malloc
+    map->keys = realloc(map->keys, last_entry * sizeof(char));
+    map->values = realloc(map->values, last_entry * sizeof(char));
     return 0;
   }
   return -1;
