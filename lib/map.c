@@ -18,11 +18,12 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct CharMap {
   char* keys;
   char* values;
-};
+} CharMap;
 
 // create a new map with empty lists (map constructor)
 struct CharMap new_map() {
@@ -32,6 +33,21 @@ struct CharMap new_map() {
   map.values = malloc(sizeof(char));
   map.values[0] = 0;
   return map;
+}
+
+// get value (input key)
+int map_get(struct CharMap* map, char key, char* output) {
+  // returns 0 on success
+  // returns -1 if key-value pair does not exist in map
+  int index = 0;
+  while (index < strlen(map->keys)) {
+    if (map->keys[index] == key) {
+      *output = map->values[index];
+      return 0;
+    }
+    index++;
+  }
+  return -1;
 }
 
 // add key-value pair (input new key and new value)
@@ -50,21 +66,6 @@ int map_add(struct CharMap* map, char key, char value) {
   map->values[map_len] = value;
   map->values[map_len + 1] = 0;
   return 0;
-}
-
-// get value (input key)
-int map_get(struct CharMap* map, char key, char* output) {
-  // returns 0 on success
-  // returns -1 if key-value pair does not exist in map
-  int index = 0;
-  while (index < strlen(map->keys)) {
-    if (map->keys[index] == key) {
-      output = map->values[index];
-      return 0;
-    }
-    index++;
-  }
-  return -1;
 }
 
 // edit value in pair (input key and new value)

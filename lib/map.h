@@ -4,7 +4,9 @@
 typedef struct CharMap {
     char* keys;
     char* values;
-};
+} CharMap;
+
+struct CharMap new_map();
 
 int map_add(struct CharMap* map, char key, char value);
 
