@@ -6,7 +6,9 @@ typedef struct CharMap {
     char* values;
 } CharMap;
 
-struct CharMap new_map();
+struct CharMap empty_map();
+
+struct CharMap full_map(char* keys, char* values);
 
 int map_add(struct CharMap* map, char key, char value);
 

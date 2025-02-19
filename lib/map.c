@@ -26,12 +26,25 @@ typedef struct CharMap {
 } CharMap;
 
 // create a new map with empty lists (map constructor)
-struct CharMap new_map() {
+struct CharMap empty_map() {
   struct CharMap map;
   map.keys = malloc(sizeof(char));
   map.keys[0] = 0;
   map.values = malloc(sizeof(char));
   map.values[0] = 0;
+  return map;
+}
+
+// create a new map from two input strings (map constructor)
+struct CharMap full_map(char* keys, char* values) {
+  struct CharMap map;
+  if (strlen(keys) != strlen(values)) {
+    map.keys = 0;
+    map.values = 0;
+    return map;
+  }
+  map.keys = keys;
+  map.values = values;
   return map;
 }
 

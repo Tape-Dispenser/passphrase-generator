@@ -24,7 +24,7 @@ char output;
 
 int main() {
   printf("generating a new map...\n");
-  struct CharMap test_map = new_map();
+  struct CharMap test_map = empty_map();
   printf("generated a new map.\n");
   
   printf("\n");
@@ -79,6 +79,72 @@ int main() {
   }
   printf("test_map does not contain key 'a'\n");
   
+  printf("\n");
+
+
+  printf("generating a new map with string inputs...\n");
+  struct CharMap constructed_map = full_map("abcdefghij", "1234567890");
+  printf("generated a new map.\n");
+
+  printf("searching for key 'a' in map...\n");
+  output;
+  return_status = map_get(&constructed_map, 'a', &output);
+  if (return_status != 0) {
+    printf("Error! Failed to find key 'a' in constructed_map!");
+    return -1;
+  }
+  printf("constructed_map contains key 'a' with value '%c' assosiated.\n", output);
+
+  printf("\n");
+
+  printf("searching for key 'b' in map...\n");
+  output;
+  return_status = map_get(&constructed_map, 'b', &output);
+  if (return_status != 0) {
+    printf("Error! Failed to find key 'b' in constructed_map!");
+    return -1;
+  }
+  printf("constructed_map contains key 'b' with value '%c' assosiated.\n", output);
+
+  printf("\n");
+
+  printf("searching for key 'e' in map...\n");
+  output;
+  return_status = map_get(&constructed_map, 'e', &output);
+  if (return_status != 0) {
+    printf("Error! Failed to find key 'e' in constructed_map!");
+    return -1;
+  }
+  printf("constructed_map contains key 'e' with value '%c' assosiated.\n", output);
+
+  printf("\n");
+
+  printf("searching for key 'j' in map...\n");
+  output;
+  return_status = map_get(&constructed_map, 'j', &output);
+  if (return_status != 0) {
+    printf("Error! Failed to find key 'j' in constructed_map!");
+    return -1;
+  }
+  printf("constructed_map contains key 'j' with value '%c' assosiated.\n", output);
+
+  printf("\n");
+
+  printf("adding key: 'a', value: '1' to the map...\n");
+  map_add(&constructed_map, 'k', '@');
+  printf("added key to map.");
+  
+  printf("\n");
+
+  printf("searching for key 'k' in map...\n");
+  output;
+  return_status = map_get(&constructed_map, 'k', &output);
+  if (return_status != 0) {
+    printf("Error! Failed to find key 'k' in constructed_map!");
+    return -1;
+  }
+  printf("constructed_map contains key 'k' with value '%c' assosiated.\n", output);
+
   printf("\n");
 
   
