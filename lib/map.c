@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 typedef struct CharMap {
@@ -43,8 +44,19 @@ struct CharMap full_map(char* keys, char* values) {
     map.values = 0;
     return map;
   }
-  map.keys = keys;
-  map.values = values;
+
+  map.keys = malloc((strlen(keys) + 1) * sizeof(char));
+  map.values = malloc((strlen(values) + 1) * sizeof(char));
+
+  size_t len = strlen(keys);
+
+  size_t index = 0;
+  while (index < len) {
+    map.keys[index] = keys[index];
+    map.values[index] = values[index];
+    index++;
+  }
+  // null terminator will be copied over in the loop
   return map;
 }
 
@@ -73,9 +85,17 @@ int map_add(struct CharMap* map, char key, char value) {
   }
   int map_len = strlen(map->keys);
   map->keys = realloc(map->keys, (map_len + 2) * sizeof(char)); // map_len + 2 accounts for null terminator and the character to be added
+  if (map->keys == 0) {
+    printf("Error while reallocating memory for keys string!\n");
+    return -1;
+  }
   map->keys[map_len] = key; // add key to keys
   map->keys[map_len + 1] = 0; // add null terminator to keys
   map->values = realloc(map->values, (map_len + 2) * sizeof(char));
+  if (map->keys == 0) {
+    printf("Error while reallocating memory for values string!\n");
+    return -1;
+  }
   map->values[map_len] = value;
   map->values[map_len + 1] = 0;
   return 0;
@@ -118,7 +138,15 @@ int map_delete(struct CharMap* map, char key) {
     // original strlen will point to the last character of the original string, which is where the new null terminator will go,
     // therefore no pointer math is needed for malloc
     map->keys = realloc(map->keys, last_entry * sizeof(char));
+    if (map->keys == 0) {
+      printf("Error while reallocating memory for keys string!\n");
+      return -1;
+    }
     map->values = realloc(map->values, last_entry * sizeof(char));
+    if (map->keys == 0) {
+      printf("Error while reallocating memory for values string!\n");
+      return -1;
+    }
     return 0;
   }
   return -1;
