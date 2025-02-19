@@ -21,10 +21,13 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
+#include "lib/map.h"
 
 unsigned int length = 16;
 char* seperator = " ";
 unsigned char words = 5;
+
+struct CharMap number_map;
 
 // mutators will have a 1 in x chance of applying per character
 unsigned int mutation_chance = 4;
@@ -44,7 +47,18 @@ int is_alpha(char input) {
     return 1;
   }
   return 0;
-} 
+}
+
+char lowercase(char input) {
+  // convert alphabetic character to lowercase
+  if (!is_alpha(input)) {
+    return 0;
+  }
+  if (input >= 'a' && input <= 'z') {
+    return input;
+  }
+  return (input - 'A' + 'a');
+}
 
 unsigned short rng() {
   // read 2 bytes from /dev/random
@@ -206,14 +220,24 @@ char* random_numbers(char* input) {
   // replace letters with numbers randomly based on globally specified mutation chance
   int i = 0;
   while (i < strlen(input)) {
+    char c = input[i];
     if (rng() % mutation_chance != 0) {
       i++;
       continue;
     }
-    if (!is_alpha(input[i])) {
+    if (!is_alpha(c)) {
       i++;
       continue;
     }
+    c = lowercase(c);
+    char replaced;
+    int return_code = map_get(&number_map, c, &replaced);
+    /*
+    if (return_code != 0) {
+      printf("Warning! character %c not in number list!\n", c);
+    }
+    */
+    input[i] = replaced;
     i++;
   }
   return input;
@@ -290,7 +314,9 @@ int main(int argc, char **argv) {
   printf("Word Count: %i\n", words);
   printf("Seperator Characters: \"%s\"\n", seperator);
   */
-  
+
+  // initialize maps
+  number_map = full_map("abegiloqstz", "48361109572");
 
   // generate passphrase
   char* passphrase = gen_passphrase();
