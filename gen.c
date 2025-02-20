@@ -231,12 +231,28 @@ char* random_numbers(char* input) {
     }
     c = lowercase(c);
     char replaced;
-    int return_code = map_get(&number_map, c, &replaced);
-    /*
-    if (return_code != 0) {
-      printf("Warning! character %c not in number list!\n", c);
+    if (misspell) {
+      if (rng() & 1) {
+        int rand;
+        rand = rng() & 0b1111;
+        while (rand > 9) {
+          rand = rng() & 0b1111;
+        }
+        replaced = '0' + rand;
+        printf("misspell replacing %c with %c\n", input[i], replaced);
+        input[i] = replaced;
+
+        i++;
+        continue;
+      }
     }
-    */
+    int return_code = map_get(&number_map, c, &replaced);
+    if (return_code != 0) {
+      continue;
+      // printf("Warning! character %c not in number list!\n", c);
+    }
+    
+    printf("replacing %c with %c\n", input[i], replaced);
     input[i] = replaced;
     i++;
   }
