@@ -70,7 +70,7 @@ unsigned short rng() {
 }
 
 char* get_word() {
-  // get a random word from words.txt
+  // get a random word from alpha.txt
 
   // init variables
   unsigned short index = rng();
@@ -82,7 +82,7 @@ char* get_word() {
 
   // open words.txt
   FILE* words = NULL;
-  words = fopen("./words.txt", "r");
+  words = fopen("./wordlists/alpha.txt", "r");
   if (words == NULL) {
     puts("ERROR: Unable to open wordlist!");
     puts("Please ensure a file named words.txt exists in the same directory as the executable.");
@@ -146,9 +146,9 @@ void help() {
   puts("      -h \t\t:    Print this menu.");
   puts("      -c \t\t:    Randomy capitalize letters (example: anTimoNY)");
   puts("      -n \t\t:    Randomy replace letters with numbers (example: ant1m0ny)");
-  puts("      -m \t\t:    Randomy misspell words (example: animuny)");
-  puts("      -p \t\t:    Randomy add special characters (example: @ntim*ny)");
-  puts("      -l [number]\t:    Generate password of a specific length. If no length is specified, the default is 16 characters.");
+  /* not fully implemented */puts("      -m \t\t:    Randomy misspell words (example: animuny)");
+  /* not implemented */puts("      -p \t\t:    Randomy add special characters (example: @ntim*ny)");
+  /* not implemented */puts("      -l [number]\t:    Generate password of a specific length. If no length is specified, the default is 16 characters.");
   puts("      -w <number>\t:    Specify the number of words in passphrase. Default is 5.");
   puts("      -u <number>\t:    Specify mutator chance. (1 in x) Default is 4.");
   puts("      -s <\"string\">\t:    Specify the seperator to be used between words. If multiple characters are provided they will be chosen from randomly. Default is space. (0x20)");
@@ -261,8 +261,6 @@ char* random_numbers(char* input) {
 
 int main(int argc, char **argv) {
   
-
-
   int option;
   char* temp_arg;
 
