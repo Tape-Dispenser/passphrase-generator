@@ -1,6 +1,7 @@
 /*
- * Passphrase Generator: Command line tool to generate cryptographically secure passphrases
- * Copyright (C) 2025-2026, Ada Gramiak, <adadispenser@gmail.com>
+ * stack.h: Stack library
+ * Copyright (C) 2025-2026, Ada (Tape), <adadispenser@gmail.com>
+ *   Special thanks to: Stella
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -15,19 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef STACK_H
+#define STACK_H
 
-#include "lib/map.h"
-#include "lib/stringutils.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <stddef.h>
 
+struct charStack {
+  size_t length;
+  size_t pointer;
+  char* data;
+};
 
+struct charStack newStack();
 
-int main() {
-  char* test_string = malloc(25 * sizeof(char));
-  strcpy(test_string, "Hello, world!\n");
-  printf(test_string);
-  char* temp = deleteString(test_string, 4, 4);
-  printf(temp);
-  return 0;
-}
+int stackPush(char c, struct charStack* stack);
+
+int stackPop(char* c, struct charStack* stack);
+
+#endif

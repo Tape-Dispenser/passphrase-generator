@@ -22,19 +22,23 @@
 #include <getopt.h>
 #include <string.h>
 #include "lib/map.h"
+#include "lib/stringutils.h"
 
 unsigned int length = 16;
 char* seperator = "-";
 unsigned char words = 5;
 
 struct CharMap number_map;
+struct CharMap special_char_map;
+
+char* special_chars_list = "!@#$%^&*()-_+=\\|,./?<>;:'\"~`";
 
 // mutators will have a 1 in x chance of applying per character
 unsigned int mutation_chance = 4;
 
 unsigned char length_mode = 0;
 
-unsigned char capitalize = 0;
+unsigned char capitalization = 0;
 unsigned char numbers = 0;
 unsigned char misspell = 0;
 unsigned char special_chars = 0;
@@ -146,8 +150,8 @@ void help() {
   puts("      -h \t\t:    Print this menu.");
   puts("      -c \t\t:    Randomy capitalize letters (example: anTimoNY)");
   puts("      -n \t\t:    Randomy replace letters with numbers (example: ant1m0ny)");
-  /* not fully implemented */puts("      -m \t\t:    Randomy misspell words (example: animuny)");
-  /* not implemented */puts("      -p \t\t:    Randomy add special characters (example: @ntim*ny)");
+  puts("      -m \t\t:    Randomy misspell words (example: animuny)");
+  puts("      -p \t\t:    Randomy add special characters (example: @ntim*ny)");
   /* not implemented */puts("      -l [number]\t:    Generate password of a specific length. If no length is specified, the default is 16 characters.");
   puts("      -w <number>\t:    Specify the number of words in passphrase. Default is 5.");
   puts("      -u <number>\t:    Specify mutator chance. (1 in x) Default is 4.");
@@ -239,7 +243,7 @@ char* random_numbers(char* input) {
           rand = rng() & 0b1111;
         }
         replaced = '0' + rand;
-        printf("misspell replacing %c with %c\n", input[i], replaced);
+        //printf("misspell replacing %c with %c\n", input[i], replaced);
         input[i] = replaced;
 
         i++;
@@ -248,14 +252,85 @@ char* random_numbers(char* input) {
     }
     int return_code = map_get(&number_map, c, &replaced);
     if (return_code != 0) {
+      i++;
+      //printf("Warning! character %c not in number list!\n", c);
       continue;
-      // printf("Warning! character %c not in number list!\n", c);
     }
     
-    printf("replacing %c with %c\n", input[i], replaced);
+    //printf("replacing %c with %c\n", input[i], replaced);
     input[i] = replaced;
     i++;
   }
+  return input;
+}
+
+char* random_special_chars(char* input) {
+  // replace letters with random special characters based on global mutation chance
+  int i = 0;
+  while (i < strlen(input)) {
+    char c = input[i];
+    __uint16_t random = rng();
+    if (random % mutation_chance != 0 || !is_alpha(c)) {
+      i++;
+      continue;
+    }
+    c = lowercase(c);
+    char replacement;
+    if (misspell && rng() & 1) {
+      continue;
+    }
+    else {
+      int return_code = map_get(&special_char_map, c, &replacement);
+      if (return_code != 0) {
+        //printf("Warning! character \"%c\" not in special char list!\n", c);
+        i++;
+        continue;
+      }
+    }
+    input[i] = replacement;
+    i++;
+  }
+  return input;
+}
+
+char* misspell_string(char* input, char cut_chars) {
+  int i = 0;
+  char c;
+  while (i < strlen(input)) {
+    c = input[i];
+    if (rng() % mutation_chance != 0) {
+      i++;
+      continue;
+    }
+    if (cut_chars && (rng() % 4 == 1)) {
+      // cut a character
+      if (i == strlen(input)) {
+        return input;
+      }
+      deleteStringInPlace(&input, i, i);
+    }
+    else {
+      // replace a character with another character
+      if (is_alpha(c)) {
+        char replacement = 31;
+        while (replacement > 25) {
+          replacement = rng() & 0b11111;
+        }
+        //printf("  replacement index: %i", replacement);
+        replacement += 'a';
+        //printf("  current character: \"%c\"\n", c);
+        //printf("  replacement character: \"%c\"\n", replacement);
+        input[i] = replacement;
+      }
+      i++;
+    }
+    //printf("%s\n", input);
+     
+  }
+  //printf("done misspelling!\n");
+  //printf("%i\n", strlen(input));
+  //printf("%s\n", input);
+  input[strlen(input)] = 0;
   return input;
 }
 
@@ -272,7 +347,7 @@ int main(int argc, char **argv) {
         help();
         exit(0);
       case 'c':
-        capitalize = 1;
+        capitalization = 1;
         break;
       case 'n':
         numbers = 1;
@@ -331,18 +406,38 @@ int main(int argc, char **argv) {
 
   // initialize maps
   number_map = full_map("abegiloqstz", "48361109572");
+  special_char_map = full_map("abcgilosvx", "@&(&||*$^%");
 
   // generate passphrase
   char* passphrase = gen_passphrase();
 
+  // debug
+  printf("%s\n", passphrase);
+
   // apply mutators if applicable
-  if (capitalize) {
+
+  if (misspell) {
+    if (length_mode) {
+      passphrase = misspell_string(passphrase, 0);
+    }
+    else {
+      passphrase = misspell_string(passphrase, 1);
+    }
+  }
+
+  if (capitalization) {
     random_caps(passphrase);
   }
 
   if (numbers) {
     random_numbers(passphrase);
   }
+
+  if (special_chars) {
+    random_special_chars(passphrase);
+  }
+
+
   // print passphrase to terminal
   printf("%s\n", passphrase);
   exit(0);
