@@ -42,6 +42,7 @@ unsigned char capitalization = 0;
 unsigned char numbers = 0;
 unsigned char misspell = 0;
 unsigned char special_chars = 0;
+unsigned char commas = 0;
 
 int is_alpha(char input) {
   if (input >= 'A' && input <= 'Z') {
@@ -152,6 +153,7 @@ void help() {
   puts("      -n \t\t:    Randomy replace letters with numbers (example: ant1m0ny)");
   puts("      -m \t\t:    Randomy misspell words (example: animuny)");
   puts("      -p \t\t:    Randomy add special characters (example: @ntim*ny)");
+  /* not implemented */puts("      -i\t\t:     Replace at least 1 character with a comma (example: antim,ny-sandal)");
   /* not implemented */puts("      -l [number]\t:    Generate password of a specific length. If no length is specified, the default is 16 characters.");
   puts("      -w <number>\t:    Specify the number of words in passphrase. Default is 5.");
   puts("      -u <number>\t:    Specify mutator chance. (1 in x) Default is 4.");
@@ -336,13 +338,24 @@ char* misspell_string(char* input, char cut_chars) {
   return input;
 }
 
+char* insert_commas(char* input) {
+  int i = 0;
+  int comma_count = rng() % 4;
+  while (i <= comma_count) {
+    int j = rng() % strlen(input);
+    input[j] = ',';
+    i++;
+  }
+  return input;
+}
+
 int main(int argc, char **argv) {
   
   int option;
   char* temp_arg;
 
   // parse arguments
-  while ((option = getopt(argc, argv, ":hcnmpl:w:u:s:")) != -1) {
+  while ((option = getopt(argc, argv, ":hcnmpil:w:u:s:")) != -1) {
     switch (option) {
       case 'h':
         // print info and exit
@@ -359,6 +372,9 @@ int main(int argc, char **argv) {
         break;
       case 'p':
         special_chars = 1;
+        break;
+      case 'i':
+        commas = 1;
         break;
       case 'l':
         length_mode = 1;
@@ -439,6 +455,12 @@ int main(int argc, char **argv) {
     random_special_chars(passphrase);
   }
 
+
+
+  // this should always be the last mutator, so that nothing can overwrite the commas added
+  if (commas) {
+    insert_commas(passphrase);
+  }
 
   // print passphrase to terminal
   printf("%s\n", passphrase);
