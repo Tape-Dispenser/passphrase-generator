@@ -8,7 +8,9 @@ the generated binary (by default it's `<project_folder>/build/passphrase-gen`) w
 for info on extra options run `<project_folder>/build/passphrase-gen -h`
 
 ## build instructions
-to build on linux systems with gcc installed run:
-`git clone https://github.com/Tape-Dispenser/passphrase-generator`
-`cd ./passphrase-generator`
-`./make`
+to build on linux systems with gcc installed run the following commands:
+```
+git clone https://github.com/Tape-Dispenser/passphrase-generator
+cd ./passphrase-generator
+./make
+```
