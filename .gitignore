@@ -4,3 +4,4 @@ build/
 sort.py
 test.c
 core.*
+make-test
