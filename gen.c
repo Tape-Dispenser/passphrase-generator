@@ -277,7 +277,9 @@ char* random_special_chars(char* input) {
     c = lowercase(c);
     char replacement;
     if (misspell && rng() & 1) {
-      continue;
+      // get a random character from special characters list
+      // TODO: make special character list configurable (in case a certain platform doesn't allow certain characters)
+      replacement = special_chars_list[rng() % strlen(special_chars_list)];
     }
     else {
       int return_code = map_get(&special_char_map, c, &replacement);
@@ -406,7 +408,7 @@ int main(int argc, char **argv) {
 
   // initialize maps
   number_map = full_map("abegiloqstz", "48361109572");
-  special_char_map = full_map("abcgilosvx", "@&(&||*$^%");
+  special_char_map = full_map("abcgilosvx", "@&(&!|*$^%");
 
   // generate passphrase
   char* passphrase = gen_passphrase();
