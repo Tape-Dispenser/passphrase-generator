@@ -11,4 +11,4 @@ for info on extra options run `<project_folder>/build/passphrase-gen -h`
 to build on linux systems with gcc installed run:
 `git clone https://github.com/Tape-Dispenser/passphrase-generator`
 `cd ./passphrase-generator`
-`gcc -o ./build/passphrase-gen gen.c ./lib/map.c`
+`./make`
