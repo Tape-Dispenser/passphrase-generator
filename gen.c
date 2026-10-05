@@ -1,6 +1,6 @@
 /*
  * Passphrase Generator: Command line tool to generate cryptographically secure passphrases
- * Copyright (C) 2025, Ada Gramiak, <adadispenser@gmail.com>
+ * Copyright (C) 2025-2026, Ada Gramiak, <adadispenser@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -24,7 +24,7 @@
 #include "lib/map.h"
 
 unsigned int length = 16;
-char* seperator = " ";
+char* seperator = "-";
 unsigned char words = 5;
 
 struct CharMap number_map;
@@ -151,10 +151,10 @@ void help() {
   /* not implemented */puts("      -l [number]\t:    Generate password of a specific length. If no length is specified, the default is 16 characters.");
   puts("      -w <number>\t:    Specify the number of words in passphrase. Default is 5.");
   puts("      -u <number>\t:    Specify mutator chance. (1 in x) Default is 4.");
-  puts("      -s <\"string\">\t:    Specify the seperator to be used between words. If multiple characters are provided they will be chosen from randomly. Default is space. (0x20)");
+  puts("      -s <\"string\">\t:    Specify the seperator to be used between words. If multiple characters are provided they will be chosen from randomly. Default is dash. (0x2D)");
   puts("");
   puts("    Exit Status:");
-  puts("    Returns success unless words.txt is unable to be found, or if bad arguments are given.");
+  puts("    Returns error if words.txt is unable to be found, or if bad arguments are given. Otherwise returns success.");
 
 }
 

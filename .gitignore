@@ -2,3 +2,4 @@ backup/
 build/
 .vscode/
 sort.py
+test.c

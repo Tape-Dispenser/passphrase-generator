@@ -1,6 +1,6 @@
 /*
  * map.c: Map library written for passphrase generator
- * Copyright (C) 2025, Ada Gramiak, <adadispenser@gmail.com>
+ * Copyright (C) 2025-2026, Ada Gramiak, <adadispenser@gmail.com>
  *   Special thanks to: Stella
  *
  * This program is free software: you can redistribute it and/or modify
